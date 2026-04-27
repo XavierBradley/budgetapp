@@ -1,5 +1,5 @@
 [versions]
-kotlin = "2.0.21"
+kotlin = "1.9.24"
 agp = "8.4.2"
 compose-bom = "2024.06.00"
 room = "2.6.1"
@@ -48,4 +48,3 @@ android-library = { id = "com.android.library", version.ref = "agp" }
 
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
-kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
