@@ -4,44 +4,37 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.ViewModelProvider
+import com.example.budgetapp.data.local.AppDatabase
+import com.example.budgetapp.data.repository.BudgetRepository
+import com.example.budgetapp.ui.navigation.AppNavigation
 import com.example.budgetapp.ui.theme.BudgetappTheme
+import com.example.budgetapp.viewmodel.MainViewModel
+import com.example.budgetapp.viewmodel.MainViewModelFactory
 
 class MainActivity : ComponentActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
+        val database = AppDatabase.getDatabase(applicationContext)
+
+        val repository = BudgetRepository(
+            expenseDao = database.expenseDao(),
+            budgetDao = database.budgetDao(),
+            goalDao = database.goalDao()
+        )
+
+        val viewModel = ViewModelProvider(
+            this,
+            MainViewModelFactory(repository)
+        )[MainViewModel::class.java]
+
         setContent {
             BudgetappTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
+                AppNavigation(viewModel = viewModel)
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    BudgetappTheme {
-        Greeting("Android")
     }
 }
